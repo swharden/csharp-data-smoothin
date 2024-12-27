@@ -2,6 +2,9 @@ name: build and test
 
 on: [push]
 
+env:
+  DOTNET_SYSTEM_GLOBALIZATION_INVARIANT: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
