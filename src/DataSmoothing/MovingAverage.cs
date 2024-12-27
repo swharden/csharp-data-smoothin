@@ -26,6 +26,17 @@ public static class MovingAverage
         return smooth;
     }
 
+    public static double[] HalvingForward(double[] data, int windowSize)
+    {
+        double[] smooth = data;
+        while (windowSize > 0)
+        {
+            smooth = Forward(smooth, windowSize);
+            windowSize /= 2;
+        }
+        return smooth;
+    }
+
     public static double[] ForwardSlow(double[] data, int windowSize)
     {
         double[] smooth = new double[data.Length];
@@ -45,26 +56,26 @@ public static class MovingAverage
         return smooth;
     }
 
-    public static double[] Bidirectional(double[] ys, int pointCount = 5)
+    public static double[] Bidirectional(double[] data, int windowSize)
     {
-        double[] smooth = new double[ys.Length];
+        double[] smooth = new double[data.Length];
 
         // smooth from left to right
         double runningSum = 0;
         int pointsInSum = 0;
         for (int i = 0; i < smooth.Length; i++)
         {
-            runningSum += ys[i];
+            runningSum += data[i];
 
-            if (pointsInSum < pointCount)
+            if (pointsInSum < windowSize)
             {
                 pointsInSum++;
                 smooth[i] += runningSum / pointsInSum;
                 continue;
             }
 
-            runningSum -= ys[i - pointCount];
-            smooth[i] += runningSum / pointCount;
+            runningSum -= data[i - windowSize];
+            smooth[i] += runningSum / windowSize;
         }
 
         // smooth from right to left
@@ -72,17 +83,17 @@ public static class MovingAverage
         pointsInSum = 0;
         for (int i = smooth.Length - 1; i >= 0; i--)
         {
-            runningSum += ys[i];
+            runningSum += data[i];
 
-            if (pointsInSum < pointCount)
+            if (pointsInSum < windowSize)
             {
                 pointsInSum++;
                 smooth[i] += runningSum / pointsInSum;
                 continue;
             }
 
-            runningSum -= ys[i + pointCount];
-            smooth[i] += runningSum / pointCount;
+            runningSum -= data[i + windowSize];
+            smooth[i] += runningSum / windowSize;
         }
 
         // average the two directions
@@ -91,6 +102,17 @@ public static class MovingAverage
             smooth[i] /= 2;
         }
 
+        return smooth;
+    }
+
+    public static double[] HalvingBidirectional(double[] data, int windowSize)
+    {
+        double[] smooth = data;
+        while (windowSize > 0)
+        {
+            smooth = Bidirectional(smooth, windowSize);
+            windowSize /= 2;
+        }
         return smooth;
     }
 }

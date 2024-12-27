@@ -7,7 +7,7 @@ internal static class Plotting
         ScottPlot.Plot plot = new();
         double[] xs = ScottPlot.Generate.Consecutive(data.Length);
         var points = plot.Add.ScatterPoints(xs, data);
-        points.LegendText = "Original";
+        points.LegendText = "Raw Data";
 
         var line = plot.Add.ScatterLine(xs, smooth);
         line.LineWidth = 2;
@@ -17,6 +17,13 @@ internal static class Plotting
         plot.Title(title);
 
         string callerName = new System.Diagnostics.StackTrace().GetFrame(1)!.GetMethod()!.Name;
-        plot.SavePng($"{callerName}{suffix}.png", 400, 300).ConsoleWritePath();
+
+        string outputFolder = "TestImages";
+        if (!Directory.Exists(outputFolder))
+        {
+            Directory.CreateDirectory(outputFolder);
+        }
+
+        plot.SavePng(Path.Join(outputFolder, $"{callerName}{suffix}.png"), 500, 300).ConsoleWritePath();
     }
 }
