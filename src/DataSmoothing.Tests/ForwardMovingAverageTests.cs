@@ -1,4 +1,6 @@
-﻿namespace DataSmoothing.Tests;
+﻿using ScottPlot;
+
+namespace DataSmoothing.Tests;
 
 public class ForwardMovingAverageTests
 {
@@ -22,7 +24,7 @@ public class ForwardMovingAverageTests
     {
         double[] data = TestData.Continuous;
         double[] smooth = MovingAverage.Forward(data, 8);
-        Plotting.SaveTestImage("Forward Moving Average", data, smooth);
+        Plotting.PlotOriginalVsSmooth("Forward Moving Average", data, smooth);
     }
 
     [Test]
@@ -30,7 +32,7 @@ public class ForwardMovingAverageTests
     {
         double[] data = TestData.Discontinuous;
         double[] smooth = MovingAverage.Forward(data, 8);
-        Plotting.SaveTestImage("Forward Moving Average", data, smooth);
+        Plotting.PlotOriginalVsSmooth("Forward Moving Average", data, smooth);
     }
 
     [Test]
@@ -38,6 +40,6 @@ public class ForwardMovingAverageTests
     {
         double[] data = TestData.Discontinuous;
         double[] smooth = MovingAverage.HalvingForward(data, 8);
-        Plotting.SaveTestImage("Forward Moving Average", data, smooth);
+        Plotting.PlotOriginalVsSmooth("Forward Moving Average", data, smooth);
     }
 }

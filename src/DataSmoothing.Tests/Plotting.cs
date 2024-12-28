@@ -1,8 +1,10 @@
-﻿namespace DataSmoothing.Tests;
+﻿using ScottPlot;
+
+namespace DataSmoothing.Tests;
 
 internal static class Plotting
 {
-    public static void SaveTestImage(string title, double[] data, double[] smooth, string suffix = "")
+    public static void PlotOriginalVsSmooth(string title, double[] data, double[] smooth)
     {
         ScottPlot.Plot plot = new();
         double[] xs = ScottPlot.Generate.Consecutive(data.Length);
@@ -17,13 +19,21 @@ internal static class Plotting
         plot.Title(title);
 
         string callerName = new System.Diagnostics.StackTrace().GetFrame(1)!.GetMethod()!.Name;
+        SaveTestImage(plot, callerName);
+    }
+
+    public static void SaveTestImage(Plot plot, string? callerName = null)
+    {
+        if (callerName is null)
+        {
+            callerName = new System.Diagnostics.StackTrace().GetFrame(1)!.GetMethod()!.Name;
+        }
 
         string outputFolder = "TestImages";
         if (!Directory.Exists(outputFolder))
         {
             Directory.CreateDirectory(outputFolder);
         }
-
-        plot.SavePng(Path.Join(outputFolder, $"{callerName}{suffix}.png"), 500, 300).ConsoleWritePath();
+        plot.SavePng(Path.Join(outputFolder, $"{callerName}.png"), 500, 300).ConsoleWritePath();
     }
 }
